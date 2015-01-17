@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<cloudimage>
+	<inputs>
+		<input>
+			<src>~/pic</src>
+			<des>hdfs://output-pic</des>
+		</input>
+	</inputs>
+
+	<!--chain> 
+		<operation> 
+			<name>FFT</name> 
+			<input>hdfs://output1</input>
+			<output>hdfs://output2</output>
+		</operation> 
+	</chain-->
+
+</cloudimage>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<cloudimage>
+	<inputs>
+		<input>
+			<src>../../1G</src>
+			<des>hdfs://output1</des>
+		</input>
+	</inputs>
+	
+	<chain> 
+		<operation> 
+			<name>HE</name> 
+			<input>hdfs://output1</input>
+			<output>hdfs://output2</output>
+		</operation> 
+		<operation> 
+			<name>GF</name> 
+			<input>hdfs://output2</input>
+			<output>hdfs://output3</output>
+		</operation> 
+		<operation> 
+			<name>FFT</name> 
+			<input>hdfs://output3</input>
+			<output>hdfs://output4</output>
+		</operation> 
+		<operation> 
+			<name>CON</name> 
+			<input>hdfs://output4</input>
+			<output>hdfs://output5</output>
+			<kernel>GF_kernel</kernel>
+			<type>0</type>
+	    </operation> 
+
+	</chain>
+	<outputs>
+		<output>
+			<src>hdfs://output3</src>
+			<des>~/pic_results</des>
+		</output>
+	</outputs>
+
+</cloudimage>

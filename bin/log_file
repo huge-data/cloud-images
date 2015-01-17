@@ -1,0 +1,6 @@
+------------------------------
+The 1 Operation: Add Images
+Input: ~/pic
+Output: hdfs://output-pic
+Running Time: 2.24096512794s
+------------------------------

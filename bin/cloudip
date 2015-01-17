@@ -1,0 +1,131 @@
+#!/usr/bin/python
+
+import os
+import sys
+import time
+import xml.dom.minidom
+
+#os.system('hadoop jar ../cloudimage-imageprocessing/target/cloudimage-imageprocessing-1.0-SNAPSHOT-jar-with-dependencies.jar cloudimage.imageprocessing.HistogramEqualization /output1/result /image-tmp')
+
+DOMTree = xml.dom.minidom.parse(sys.argv[1])
+collection = DOMTree.documentElement
+
+num = 1
+f = open('log_file','w')
+
+# Find Inputs
+inputs = collection.getElementsByTagName('inputs')
+for element in inputs:
+	input = element.getElementsByTagName('input')
+	for elem in input:
+		f.write( '------------------------------\n')
+		f.write( 'The ' + str(num) + ' Operation: Add Images\n' )
+		num += 1
+		src = elem.getElementsByTagName('src')
+		src_str = src[0].firstChild.nodeValue
+		f.write( 'Input: ' + src_str + '\n')
+		src_str = src_str.replace('hdfs:/','')
+		des = elem.getElementsByTagName('des')
+		des_str = des[0].firstChild.nodeValue
+		f.write( 'Output: ' + des_str + '\n')
+		des_str = des_str.replace('hdfs:/','')
+
+		start_time = time.time()
+		ret = os.system('hadoop jar ../cloudimage-bundle/target/cloudimage-bundle-1.0-SNAPSHOT.jar add -r ' + des_str + '/result ' + src_str) 
+		ret>>8
+		if ret != 0:
+			f.write( 'There are somthing wrong in ' + str(num-1) + ' operation.\n')
+			sys.exit()
+		end_time = time.time()
+
+		f.write( 'Running Time: ' + str(end_time - start_time) + 's\n') 
+		f.write( '------------------------------\n')
+		
+
+# Find Operations
+chain = collection.getElementsByTagName('chain')
+for element in chain:
+	ops = element.getElementsByTagName('operation')
+	for elem in ops:
+
+		f.write( '------------------------------\n')
+		name = elem.getElementsByTagName('name')
+		name_str = name[0].firstChild.nodeValue
+		f.write( 'The ' + str(num) + ' Operation: ' + name_str + '\n') 
+		num += 1
+
+		src = elem.getElementsByTagName('input')
+		src_str = src[0].firstChild.nodeValue
+		f.write( 'Input: ' + src_str + '\n')
+		src_str = src_str.replace('hdfs:/','')
+		f.write( src_str + '\n')
+		des = elem.getElementsByTagName('output')
+		des_str = des[0].firstChild.nodeValue
+		f.write( 'Output: ' + des_str + '\n')
+		des_str = des_str.replace('hdfs:/','')
+		f.write( des_str + '\n')
+		if name[0].firstChild.nodeValue == 'CON' :
+			con_matrix = elem.getElementsByTagName('kernel')
+			con_matrix_str = con_matrix[0].firstChild.nodeValue
+			f.write( 'Matrix File: ' + con_matrix_str + '\n')
+			con_type = elem.getElementsByTagName('type')
+			con_type_str = con_type[0].firstChild.nodeValue
+			f.write( 'Type: ' + con_type_str + '\n')
+
+		start_time = time.time()
+
+		if name_str == 'HE':
+			ret = os.system('hadoop jar ../cloudimage-imageprocessing/target/cloudimage-imageprocessing-1.0-SNAPSHOT-jar-with-dependencies.jar cloudimage.imageprocessing.HistogramEqualization ' + src_str + ' ' + des_str)
+		elif name_str == 'GF':
+			ret = os.system('hadoop jar ../cloudimage-imageprocessing/target/cloudimage-imageprocessing-1.0-SNAPSHOT-jar-with-dependencies.jar cloudimage.imageprocessing.GaussianFilter ' + src_str + ' ' + des_str)
+		elif name_str == 'CED':
+			ret = os.system('hadoop jar ../cloudimage-imageprocessing/target/cloudimage-imageprocessing-1.0-SNAPSHOT-jar-with-dependencies.jar cloudimage.imageprocessing.Canny ' + src_str + ' ' + des_str)
+		elif name_str == 'FFT':
+			ret = os.system('hadoop jar ../cloudimage-imageprocessing/target/cloudimage-imageprocessing-1.0-SNAPSHOT-jar-with-dependencies.jar cloudimage.imageprocessing.FFT ' + src_str + ' ' + des_str)
+		elif name_str == 'IG':
+			ret = os.system('hadoop jar ../cloudimage-imageprocessing/target/cloudimage-imageprocessing-1.0-SNAPSHOT-jar-with-dependencies.jar cloudimage.imageprocessing.ImageGradient ' + src_str + ' ' + des_str)
+		elif name_str == 'CON':
+			ret = os.system('hadoop jar ../cloudimage-imageprocessing/target/cloudimage-imageprocessing-1.0-SNAPSHOT-jar-with-dependencies.jar cloudimage.imageprocessing.Convolution ' + src_str + ' ' + des_str + ' ' + con_matrix_str + ' ' + con_type_str )
+		else:
+			f.write( 'Wrong Operation Name\n' )
+			sys.exit()
+
+		end_time = time.time()
+		f.write( 'Kernel running time: ' + str(end_time - start_time) + 's\n')
+		ret>>8
+		if ret != 0:
+			f.write( 'There are somthing wrong in ' + str(num-1) + ' operation.\n')
+			sys.exit()
+
+# Find Outputs 
+inputs = collection.getElementsByTagName('outputs')
+for element in inputs:
+	input = element.getElementsByTagName('output')
+	for elem in input:
+		f.write( '------------------------------\n')
+		f.write( 'The ' + str(num) + ' Operation: Get Images\n') 
+		num += 1
+
+		src = elem.getElementsByTagName('src')
+		src_str = src[0].firstChild.nodeValue
+		src_str = src_str.replace('hdfs:/','')
+		f.write( 'Input: ' + src_str + '\n')
+
+		des = elem.getElementsByTagName('des')
+		des_str = des[0].firstChild.nodeValue
+		f.write( 'Output: ' + des_str + '\n')
+		des_str = des_str.replace('hdfs:/','')
+
+		start_time = time.time()
+
+		ret = os.system('hadoop jar ../cloudimage-bundle/target/cloudimage-bundle-1.0-SNAPSHOT.jar get -r ' + src_str + ' ' + des_str) 
+		ret>>8
+		if ret != 0:
+			f.write( 'There are somthing wrong in ' + str(num-1) + ' operation.i\n')
+			sys.exit()
+
+		end_time = time.time()
+
+		f.write( 'Running Time: ' + str(end_time - start_time)  + 's\n') 
+
+f.close();
