@@ -1,46 +1,12 @@
-CloudImageProcessing Project
-===========
 
-The CloudImageProcessing (CIP) is an image processing framework based on Hadoop.
-CIP is designed and implemented by the Parallel Architecture & System Laboratory
-(PASL) at Auburn University.
+## 基于HDFS的分布式图像处理框架HI
 
-This version of CIP is based on Hadoop 2.2.0. You can use it without any major 
-changes to Hadoop.
+> 开发环境在Hadoop 2.2.0。
 
 
-Directory Structure
-===========
+### 使用说明
 
-CloudImageProcessing
-|-- pom.xml						
-|-- ReadME 						
-|-- bin							
-|	|-- cloudip	
-|	|-- example.xml				
-|	`-- example.xml.template				
-|-- cloudimage-bundle			
-|	|-- src						
-|	|-- target					
-|	`-- pom.xml					
-|-- cloudimage-codec			
-|	|-- src						
-|	|-- target                  
-|	`-- pom.xml                 
-|-- cloudimage-imageprocessing
-|	|-- src						
-|	|-- target                  
-|	`-- pom.xml                 
-`-- cloudimage-mapreduce
-	|-- src						
-	|-- target                  
-	`-- pom.xml                 
-
-
-Instructions
-===========
-
-1. Setup Hadoop running environment.
+1. 安装Hadoop运行环境
 
   a. Download Hadoop 2.2.0 from offcial website: http://hadoop.apache.org/
   b. Setup Hadoop's configuration files as needed: core-site.xml, 
@@ -51,24 +17,24 @@ Instructions
   More details can be seen in Hadoop official homepage:
   http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/ClusterSetup.html
 
-  Note: Setting more memory in mapred-site.xml will better support CIP when the
+  Note: Setting more memory in mapred-site.xml will better support HI when the
   data size is really large.
 
-2. Compile CIP.
+2. 编译
 
-  Enter into CIP's root directory, and use command "mvn clean install" to compile CIP.
+  Enter into HI's root directory, and use command "mvn clean install" to compile HI.
 
-3. CIP Configuration
+3. HI配置
 
   In the bin/ directory, there are two important parts, cloudip script and 
   operation configuration XML files.
 
   Cloudip:
-      The cloudip script is the main file to start the Hadoop jobs for CIP. 
+      The cloudip script is the main file to start the Hadoop jobs for HI. 
   
   XML configuration file:
        The XML configuration file allows the user to define inputs, chain, and ouputs
-       for CIP. Cloudip reads the necessary information in the XML file and then 
+       for HI. Cloudip reads the necessary information in the XML file and then 
        starts the convolution of Hadoop image processing jobs.
 
   The XML file needs to be written in the XML format. In the convolution file, there
@@ -102,7 +68,7 @@ Instructions
     <type> - Computation type only for convolution operation
 
 
- Currently support image processing algorithms.
+ 当前版本支持的图像处理算法如下：
 
   Name		Operation
   -------------------------------------------------------------------------------
@@ -112,7 +78,7 @@ Instructions
   IG		Image Gradient
   FFT		2D Fastest Fourier Transform
  
-Example:
+示例:
 
   <inputs>
 	<input>
@@ -158,7 +124,7 @@ Example:
   values of this kernel. We provide an example kernel file (GF_kernel) in 
   bin directory.
 
-4. Run CIP
+4. 运行HI
 
   Run cloudip with a XML file in bin directory.
   For example:
