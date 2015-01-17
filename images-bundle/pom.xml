@@ -39,7 +39,6 @@
 	</dependencies>
 
 	<build>
-		<!-- 配置该插件是为了存储Eclipse m2e配置文件，对Maven构建本省没有影响 -->
 		<pluginManagement>
 			<plugins>
 				<plugin>

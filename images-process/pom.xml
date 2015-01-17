@@ -50,7 +50,6 @@
 	</dependencies>
 
 	<build>
-		<!-- 配置该插件是为了存储Eclipse m2e配置文件，对Maven构建本省没有影响 -->
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -64,7 +63,7 @@
 									<pluginExecutionFilter>
 										<groupId>org.apache.maven.plugins</groupId>
 										<artifactId>maven-dependency-plugin</artifactId>
-										<versionRange>[1.0,)</versionRange>
+										<versionRange>[2.5,)</versionRange>
 										<goals>
 											<goal>copy-dependencies</goal>
 										</goals>
@@ -88,7 +87,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>czx.soft.images.process.HistogramEqualization</mainClass>
+							<mainClass>zx.soft.images.process.HistogramEqualization</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -109,7 +108,7 @@
 							<outputDirectory>${project.build.directory}/dependency-jars/</outputDirectory>
 						</configuration>
 					</execution>
-				</executions>jar
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
